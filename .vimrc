@@ -1,23 +1,33 @@
 set nocompatible
-filetype off
 
+"起動時
 if has('vim_starting')
- set runtimepath+=~/.vim/bundle/neobundle.vim/
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+    "プラグインを入れるパス
+    call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
-
+"compile
 NeoBundle 'Shougo/vimproc',{
 \ 'build':{
 \   'unix':'make -f make_unix.mak',
 \  },
 \}
+
+"neobundle manage itself
+"to Install, ':NeoBundleInstall blah'
+NeoBundleFetch 'Shougo/neobundle.vim'
+"unite
 NeoBundle 'Shougo/unite.vim'
+"neocomplcache 補完
 NeoBundle 'Shougo/neocomplcache'
+"Snippet
+NeoBundle 'Shougo/neosnippet'
+"tab
 NeoBundle 'buftabs'
+"テーマいじり
+":Unite colorscheme -auto-preview　がおすすめ
 NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle 'ujihisa/unite-font'
-NeoBundle 'tsukkee/unite-help'
 
 filetype plugin on
 filetype indent off
@@ -49,104 +59,119 @@ set tabstop=4
 "autocmd InsertLeave * highlight StatusLine guifg=#2E4340 guibg=#ccdc90
 "augroup END
 
+"-----------------------------------------------
 " Buftabs
-
-nnoremap <silent> <SPACE>l :<C-u>bnext<CR>
-nnoremap <silent> <SPACE>h :<C-u>bprevious<CR>
-nnoremap <silent> <SPACE>cc :<C-u>Unite colorscheme --auto-preview
+"-----------------------------------------------
+" ファイル名のみ表示
 let g:buftabs_only_basename=1
-"let g:buftabs_in_statusline=1
+" タブをステータスラインに
+let g:buftabs_in_statusline=1
+" ハイライト
 let g:buftabs_active_highlight_group="Visual"
+" 次のタブ
+nnoremap <silent> <SPACE>l :<C-u>bnext<CR>
+" 前のタブ
+nnoremap <silent> <SPACE>h :<C-u>bprevious<CR>
 
-
+"-----------------------------------------------
 "Unite
-
+"-----------------------------------------------
+"Uniteを挿入モードで開始
 let g:unite_enable_start_insert=1
+
+" バッファ一覧
 nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
+" ファイル一覧
 nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+" レジスタ一覧
 nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
+" 最近使用したファイル一覧
 nnoremap <silent> ,um :<C-u>Unite file_mru<CR>
+" 常用セット？
 nnoremap <silent> ,uu :<C-u>Unite buffer file_mru<CR>
+" 全部マシマシ
 nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+" Esc二回でさようなら
+" 一回きりのマッピングはnnoremap
+" inoremapは挿入モード限定
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
 
-"NeoComplCache　設定"
-" Disable AutoComplPop. Comment out this line if AutoComplPop is not installed.
+"-----------------------------------------------
+"NeoComplCache
+"-----------------------------------------------
+" NeoComplCache　設定"
+" AutoComplPopは都合が悪いので無効化
 let g:acp_enableAtStartup = 0
-" Launches neocomplcache automatically on vim startup.
+" vim起動時にneocomplcache
 let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
+" 大文字が入力されたら大文字小文字区別を行う
 let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underscore completion.
+" 大文字を区切りに*が入力される ex)hogE -> hogE**
+let g:neocomplcache_enable_camel_case_completion = 0
+" アンダーバー補完
 let g:neocomplcache_enable_underbar_completion = 1
-" Sets minimum char length of syntax keyword.
+" キャッシュする単語の最短字数
 let g:neocomplcache_min_syntax_length = 3
 " buffer file name pattern that locks neocomplcache. e.g. ku.vim or fuzzyfinder 
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Define file-type dependent dictionaries.
+" ディクショナリ設定
 let g:neocomplcache_dictionary_filetype_lists = {
     \ 'default' : '',
     \ 'vimshell' : $HOME.'/.vimshell_hist',
     \ 'scheme' : $HOME.'/.gosh_completions'
     \ }
-
-" Define keyword, for minor languages
+" いじらないでおいたほうがいい
 if !exists('g:neocomplcache_keyword_patterns')
   let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
+" snippet起動
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+" 補完やりなおし
 inoremap <expr><C-g>     neocomplcache#undo_completion()
+" 一般的な文字列も補完
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
 " SuperTab like snippets behavior.
-"imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? \<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? \<C-n> : \<TAB>
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-" <TAB>: completion.
+" <CR> :ポップアップの決定
+inoremap <expr><CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+
+" <TAB> :補完候補を次に
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
+
+" <C-h>,<BS> :補完キャンセル
 inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+" <C-y> :ポップアップを閉じる
 inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" <C-e>, <Right> :ポップアップをキャンセル
+inoremap <expr><Right> pumvisible() ? neocomplcache#cancel_popup() : "\<Right>"
 
-" AutoComplPop like behavior.
+" 自動で最初の候補を選択（非推奨）
 "let g:neocomplcache_enable_auto_select = 1
 
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
-"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" omni補完の有効化
+inoremap <expr><C-x><C-o> &filetype == 'vim' ? "\<C-x><C-v><C-p>" : neocomplcache#manual_omni_complete()
 
-" Enable omni completion. Not required if they are already set elsewhere in .vimrc
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
+"rubyは重いっぽいので却下
+"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 " Enable heavy omni completion, which require computational power and may stall the vim. 
 if !exists('g:neocomplcache_omni_patterns')
   let g:neocomplcache_omni_patterns = {}
 endif
 let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
 let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 
-inoremap <expr><CR>    pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-inoremap <expr><Right> pumvisible() ? neocomplcache#cancel_popup() : "\<Right>"
