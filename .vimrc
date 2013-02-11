@@ -33,19 +33,23 @@ filetype plugin on
 filetype indent off
 
 
-"if neobundle#exists_not_installed_bundles()
-" echomsg 'Not installed bundles : ' .
-"  \ string(neobundle#get_not_installed_bundle_names())
-" echomsg 'Please execute ":NeoBundleInstall" command.'
-"endif
+if neobundle#exists_not_installed_bundles()
+ echomsg 'Not installed bundles : ' .
+  \ string(neobundle#get_not_installed_bundle_names())
+ echomsg 'Please execute ":NeoBundleInstall" command.'
+endif
 
 colorscheme desert
 set autoread
 set cindent
 set cmdheight=3
 set expandtab
+set hidden
+set incsearch
 set list
+set number
 set noautoindent
+set smartcase
 set smartindent
 set showmode
 set showmatch

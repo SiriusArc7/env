@@ -1,35 +1,59 @@
+#----------------
+# Basic
+#----------------
+setopt no_beep
+setopt auto_cd
+setopt auto_pushd
+setopt correctall
+setopt magic_equal_subst
+setopt prompt_subst
+setopt notify
+
 #キーバインド
 bindkey -v
 
-#ヒストリ
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
-
-# -z -> zsh-style load
 autoload -Uz colors
 colors
-autoload -Uz compinit
-compinit
 autoload -Uz promptinit
 promptinit
 autoload bashcompinit
 bashcompinit
-source ~/.git-completion.bash
+# https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh
+source ~/.git-completion.zsh
+
+#----------------
+# ヒストリ
+#----------------
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+setopt bang_hist
+setopt extended_history
+setopt hist_ignore_dups
+setopt hist_reduce_blanks
+setopt share_history
+
+#----------------
+# 補完
+#----------------
+autoload -Uz compinit; compinit
+setopt auto_list
+setopt auto_menu
+setopt list_packed
+setopt list_types
+
+#----------------
+# Glob 
+#----------------
+setopt extended_glob
+unsetopt caseglob
 
 # cdいらず
 setopt auto_cd
 # ディレクトリスタック行き 
-setopt auto_pushd
-setopt correctall
 setopt complete_aliases
-setopt hist_ignore_dups
-setopt hist_save_no_dups
-setopt list_packed
-setopt prompt_subst
 setopt pushd_ignore_dups
 setopt rmstar_wait
-
 
 zstyle :compinstall filename '~/.zshrc'
 zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
@@ -44,7 +68,6 @@ zstyle ':completion:*:default' menu select
 RPROMPT="%{$fg_bold[white]%}[%{$reset_color%}%{$fg[cyan]%}%~%{$reset_color%}%{$fg_bold[white]%}]%{$reset_color%}"
 
 #rootとか
-
 case ${UID} in
   0)
   PROMPT="%{$fg_bold[green]%}%m%{$fg_bold[red]%}#%{$reset_color%} "
