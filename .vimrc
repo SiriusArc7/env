@@ -1,4 +1,4 @@
-set nocompatible
+﻿set nocompatible
 
 "起動時
 if has('vim_starting')
@@ -13,6 +13,10 @@ NeoBundle 'Shougo/vimproc',{
 \   'unix':'make -f make_unix.mak',
 \  },
 \}
+
+"first of all,
+"git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
+"git clone https://github.com/Shougo/vimproc ~/.vim/bundle/vimproc
 
 "neobundle manage itself
 "to Install, ':NeoBundleInstall blah'
