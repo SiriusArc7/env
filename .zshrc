@@ -9,6 +9,10 @@ setopt magic_equal_subst
 setopt prompt_subst
 setopt notify
 
+alias ls='ls -alpo --color=auto'
+alias dir='ls -alpo --color=auto'
+export LANG=ja_JP.UTF-8
+
 #キーバインド
 bindkey -v
 
@@ -19,7 +23,7 @@ promptinit
 autoload bashcompinit
 bashcompinit
 # https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh
-source ~/.git-completion.zsh
+# source ~/.git-completion.zsh
 
 #----------------
 # ヒストリ
@@ -79,5 +83,5 @@ case ${UID} in
   ;;
 esac
 
-function chpwd(){ ls -v -F --color=auto}
+function chpwd(){ ls -vlhpaoF}
 
