@@ -19,7 +19,7 @@ promptinit
 autoload bashcompinit
 bashcompinit
 # https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh
-source ~/.git-completion.zsh
+# source ~/.git-completion.zsh
 
 #----------------
 # ヒストリ
@@ -80,4 +80,5 @@ case ${UID} in
 esac
 
 function chpwd(){ ls -v -F --color=auto}
-
+alias ls='ls -v -F --color=auto'
+alias dir='ls -v -F --color=auto'
