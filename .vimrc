@@ -4,20 +4,24 @@
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim/
     "プラグインを入れるパス
-    call neobundle#rc(expand('~/.vim/bundle/'))
+    call neobundle#begin(expand('~/.vim/bundle/'))
+    call neobundle#end()
 endif
 
 "compile
+call neobundle#begin()
 NeoBundle 'Shougo/vimproc',{
 \ 'build':{
 \   'unix':'make -f make_unix.mak',
 \  },
 \}
+call neobundle#end()
 
 "first of all,
 "git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
 "git clone https://github.com/Shougo/vimproc ~/.vim/bundle/vimproc
 
+call neobundle#begin()
 "neobundle manage itself
 "to Install, ':NeoBundleInstall blah'
 NeoBundleFetch 'Shougo/neobundle.vim'
@@ -32,6 +36,7 @@ NeoBundle 'buftabs'
 "テーマいじり
 ":Unite colorscheme -auto-preview　がおすすめ
 NeoBundle 'ujihisa/unite-colorscheme'
+call neobundle#end()
 
 filetype plugin on
 filetype indent off
